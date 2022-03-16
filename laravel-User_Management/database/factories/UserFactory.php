@@ -17,7 +17,20 @@ $factory->define(App\User::class, function (Faker $faker) {
     return [
         'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
-        'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', // secret
+        'password' => '$2y$10$jxZPMg6lIZHjuEfP/Kk0m.JILR6dAw4BpN2lMflmMjGPT/PvXQDbW', // 123
+        'role' => 'user',
         'remember_token' => str_random(10),
+    ];
+});
+
+$factory->define(\App\Member::class, function(Faker $faker){
+    return [
+        'name' => $faker->name,
+        'workplace' => $faker->company,
+        'phone' => $faker->phoneNumber,
+        'user_id' => 0,
+        'address' => $faker->address,
+        'status' => 'online',
+        'avatar' => $faker->imageUrl(),
     ];
 });

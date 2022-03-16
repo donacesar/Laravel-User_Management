@@ -1,0 +1,14 @@
+.my-error {
+    background-color: #eeeeee;
+    text-align: center;
+    padding: 200px;
+}
+
+footer {
+    width: 100%;
+    font-size: 30px;
+    position : fixed;
+    height : 150px;
+    bottom : 0;
+}
+
