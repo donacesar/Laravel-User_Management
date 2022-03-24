@@ -13,6 +13,7 @@
 
 // Public Routes
 
+use App\Member;
 use Illuminate\Support\Facades\Route;
 
 Route::get('logout', 'UserController@logout');
@@ -29,19 +30,32 @@ Route::get('insert10members', function(){
     factory(App\Member::class, 10)->create();
 
 });
-Route::get('insert10users', function () {
 
-    factory(App\User::class, 10)->create();
+
+/*
+Route::get('pictonull', function(){
+
+    $members = Member::where('id', '>=', 9)->get();
+    $members->map(function($item) {
+        // Стираем битые ссылки в базе
+       $item->avatar = null;
+       $item->save();
+    });
+
+    dd('Проверяй в базе обнулились ли аватарки');
+
 });
+*/
 
 
-
-// Admin Routes
-
+// Auth Routes
 Route::middleware(['auth'])->group(function(){
 
     Route::get('/', 'PageController@index')->name('home');
+    Route::get('profile/{id}', 'PageController@profile');
 
+
+    // Admin Routes
     Route::prefix('admin')->group(function() {
 
         Route::get('create', 'PageController@create');
@@ -53,9 +67,6 @@ Route::middleware(['auth'])->group(function(){
         Route::get('media/{id}', 'PageController@media');
         Route::post('media/{id}', 'UserController@media');
 
-        Route::get('profile/{id}', 'PageController@profile');
-        Route::post('profile/{id}', 'UserController@profile');
-
         Route::get('security/{id}', 'PageController@security');
         Route::post('security/{id}', 'UserController@security');
 
@@ -63,36 +74,4 @@ Route::middleware(['auth'])->group(function(){
         Route::post('status/{id}', 'UserController@status');
     });
 
-
 });
-
-
-
-// User Services Routes
-
-
-
-
-
-
-// Групаируем префиксы в путях
-//         /admin/posts
-/*Route::prefix('admin')->group(function () {
-    Route::get('posts', function() {
-        echo 123;
-    });
-
-    // используем группу namespace-ов для котроллеров админки
-    Route::namespace('Admin')->group(function() {
-
-        // В итоге получится App\Http\Controllers\Admin\PostController
-        Route::get('post', 'PostController@index');
-    });
-});*/
-
-// потом установим middleware
-/*Route::middleware(['first', 'second'])->group(function() {
-   Route::get('test', function() {
-      // Роут использует first и second Middleware
-   });
-});*/

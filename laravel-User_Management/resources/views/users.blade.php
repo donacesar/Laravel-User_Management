@@ -11,12 +11,20 @@
 @section('content')
 
     <main id="js-page-content" role="main" class="page-content mt-3">
-        @if(\Illuminate\Support\Facades\Session::has('flash_message'))
+        @if(\Illuminate\Support\Facades\Session::has('success'))
             <div class="alert alert-success">
-                {{\Illuminate\Support\Facades\Session::get('flash_message')}}
-                Профиль успешно обновлен.
+                {{\Illuminate\Support\Facades\Session::get('success')}}
             </div>
         @endif
+
+            @if(\Illuminate\Support\Facades\Session::has('danger'))
+            <div class="alert alert-danger">
+                {{\Illuminate\Support\Facades\Session::get('danger')}}
+            </div>
+            @endif
+
+
+
         <div class="subheader">
             <h1 class="subheader-title">
                 <i class='subheader-icon fal fa-users'></i> Список пользователей
@@ -46,14 +54,25 @@
         <div class="row" id="js-contacts">
             @foreach($members as $member)
                 <div class="col-xl-4">
-                    @php
-                        $searchName = strtolower($member->name);
-                    @endphp
-                    <div id="c_1" class="card border shadow-0 mb-g shadow-sm-hover" data-filter-tags="{{$searchName}}">
+                    <div id="c_1" class="card border shadow-0 mb-g shadow-sm-hover" data-filter-tags="{{strtolower($member->name)}}">
                         <div class="card-body border-faded border-top-0 border-left-0 border-right-0 rounded-top">
                             <div class="d-flex flex-row align-items-center">
-                                <span class="status status-success mr-3">
-                                    <span class="rounded-circle profile-image d-block " style="background-image:url('{{$member->avatar}}'); background-size: cover;"></span>
+                                @php
+                                $className = 'secondary';
+                                if ($member->status == 'online') {$className = 'success';}
+                                if ($member->status == 'busy') {$className = 'warning';}
+                                if ($member->status == 'away') {$className = 'danger';}
+
+
+                                @endphp
+                                <span class="status status-{{$className}} mr-3">
+
+                                    @if($member->avatar == null)
+                                        <span class="rounded-circle profile-image d-block " style="background-image:url('img/demo/avatars/avatar-m.png'); background-size: cover;"></span>
+                                    @else
+                                        <span class="rounded-circle profile-image d-block " style="background-image:url('{{$member->avatar}}'); background-size: cover;"></span>
+                                    @endif
+
                                 </span>
                                 <div class="info-card-text flex-1">
                                     <a href="javascript:void(0);" class="fs-xl text-truncate text-truncate-lg text-info" data-toggle="dropdown" aria-expanded="false">
@@ -93,19 +112,15 @@
                                 </button>
                             </div>
                         </div>
-                        @php
-                            $id = $member->user_id;
-                            $email = Illuminate\Support\Facades\DB::table('users')->select(['*'])->where('id', $id)->first()->email;
-                        @endphp
                         <div class="card-body p-0 collapse show">
                             <div class="p-3">
                                 <a href="tel:{{$member->phone}}" class="mt-1 d-block fs-sm fw-400 text-dark">
                                     <i class="fas fa-mobile-alt text-muted mr-2"></i>
                                     {{$member->phone}}
                                 </a>
-                                <a href="mailto: {{$email}}" class="mt-1 d-block fs-sm fw-400 text-dark">
+                                <a href="mailto: {{$member->user->email}}" class="mt-1 d-block fs-sm fw-400 text-dark">
                                     <i class="fas fa-mouse-pointer text-muted mr-2"></i>
-                                    {{$email}}
+                                    {{$member->user->email}}
                                 </a>
                                 <address class="fs-sm fw-400 mt-4 text-muted">
                                     <i class="fas fa-map-pin mr-2"></i>
@@ -127,8 +142,12 @@
                     </div>
                 </div>
             @endforeach
-
         </div>
+
+            <div class="my-pagination">
+                {{$members->links()}}
+            </div>
+
     </main>
 @endsection
 

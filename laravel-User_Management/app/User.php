@@ -29,12 +29,18 @@ class User extends Authenticatable
     ];
 
     public static function index() {
-        $users = DB::table('users')->select('*')->get();
+       /* $users = DB::table('users')->select('*')->get();
         $allUsers = $users->all();
-        return $allUsers;
+        return $allUsers;*/
+
+        return self::all();
     }
 
     public static function one($id) {
         $user = DB::table('users')->select('*')->where('id', $id)->get();
+    }
+
+    public function member() {
+        return $this->hasOne('App\Member');
     }
 }

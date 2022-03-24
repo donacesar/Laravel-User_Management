@@ -7,8 +7,13 @@
 footer {
     width: 100%;
     font-size: 30px;
-    position : fixed;
+    #position : fixed;
     height : 150px;
     bottom : 0;
+}
+
+my-pagination {
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 

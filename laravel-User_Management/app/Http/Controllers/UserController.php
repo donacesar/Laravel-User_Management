@@ -2,12 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Member;
+use App\User;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 
 class UserController extends Controller
 {
+    private function access($id) {
+        dd('Метод ACCESS запущен');
+        if(Auth::user()->id != $id && !Auth::user()->is_admin) {
+            Session::flash('danger', 'У вас не достаточно прав');
+            return redirect()->route('home')->throwResponse();
+        }
+    }
+
+    private function adminAccess() {
+        if (true) {}
+    }
     public function login(Request $request) {
 
         $this->validate($request, [
@@ -31,7 +47,8 @@ class UserController extends Controller
         }
 
         // Логин не сработал
-        dd($request->all());
+        Session::flash('danger', 'Неверный логин или пароль.');
+        return redirect()->route('login');
 
     }
 
@@ -39,24 +56,7 @@ class UserController extends Controller
     {
         Auth::logout();
 
-      /*  $request->session()->invalidate();
-
-        $request->session()->regenerateToken();*/
-
         return redirect()->route('login');
-
-    }
-
-    public function create(Request $request) {
-
-        $this->validate($request, [
-            'email' => 'required|email|unique:users',
-            'password' => 'required',
-        ]);
-
-
-
-        dd($request->all());
 
     }
 
@@ -66,11 +66,41 @@ class UserController extends Controller
             'email' => 'required|email|unique:users',
             'password' => 'required',
         ]);
-        dd($request->all());
+        $user = new User();
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password);
+        $user->save();
+        $member = new Member();
+        $member->user_id = $user->id;
+        $member->save();
+        Session::flash('success', 'Регистрация прошла успешно.');
+        return redirect()->route('login');
     }
 
-    public function edit(Request $request, $id) {
+    public function create(Request $request) {
 
+        $this->validate($request, [
+            'email' => 'required|email|unique:users',
+            'password' => 'required',
+        ]);
+        $user = new User();
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password);
+        $user->save();
+        $member = new Member();
+        $member->user_id = $user->id;
+        $member->save();
+        Session::flash('success', 'Создание пользователя пешно завершено.');
+        return redirect()->route('home');
+
+
+        dd($request->all());
+
+    }
+
+
+    public function edit(Request $request, $id) {
+        $this->access($id);
         dd($id, $request->all());
 
     }

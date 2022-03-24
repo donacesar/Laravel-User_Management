@@ -28,9 +28,9 @@ $factory->define(\App\Member::class, function(Faker $faker){
         'name' => $faker->name,
         'workplace' => $faker->company,
         'phone' => $faker->phoneNumber,
-        'user_id' => 0,
+        'user_id' => factory(App\User::class)->create()->id,
         'address' => $faker->address,
-        'status' => 'online',
+        'status' => $faker->randomElement(['online', 'busy', 'away']),
         'avatar' => $faker->imageUrl(),
     ];
 });

@@ -42,10 +42,15 @@
                 @endforeach
             </div>
         @endif
-        @if(\Illuminate\Support\Facades\Session::has('flash_message'))
+        @if(\Illuminate\Support\Facades\Session::has('success'))
         <div class="alert alert-success">
-            {{\Illuminate\Support\Facades\Session::get('flash_message')}}
+            {{\Illuminate\Support\Facades\Session::get('success')}}
         </div>
+        @endif
+        @if(\Illuminate\Support\Facades\Session::has('danger'))
+            <div class="alert alert-danger">
+                {{\Illuminate\Support\Facades\Session::get('danger')}}
+            </div>
         @endif
         <form action="login" method="post">
             <div class="form-group">

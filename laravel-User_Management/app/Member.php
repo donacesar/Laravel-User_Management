@@ -10,6 +10,9 @@ class Member extends Model{
         'name', 'workplace', 'phone', 'user_id', 'address', 'status', 'avatar'
     ];
 
+    // Либо можно использовать обратное свойство, запрещающее заполнение
+    // public $guarded = []; - т.е. ничего не запрещено
+
     public $timestamps = false;
 
 	 /*public static function all() {
@@ -20,6 +23,10 @@ class Member extends Model{
 
     public static function one($id) {
 	     return DB::table('members')->select('*')->where('user_id', $id)->get()->first();
+    }
+
+    public function user() {
+        return $this->belongsTo('App\User');
     }
 
 
