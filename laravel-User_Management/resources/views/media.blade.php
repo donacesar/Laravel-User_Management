@@ -12,11 +12,20 @@
     <main id="js-page-content" role="main" class="page-content mt-3">
         <div class="subheader">
             <h1 class="subheader-title">
-                <i class='subheader-icon fal fa-image'></i> Загрузить аватар {{$id}}
+                <i class='subheader-icon fal fa-image'></i> Загрузить аватар
             </h1>
-
         </div>
-        <form action="admin/media/{{$id}}" method="post" enctype="multipart/form-data">
+
+        <!--         Message Box          -->
+        @if ($errors->any())
+            <div class="alert alert-danger text-dark" role="alert">
+                @foreach ($errors->all() as $error)
+                    {{ $error }} <br>
+                @endforeach
+            </div>
+        @endif
+
+        <form action="admin/media/{{$member->id}}" method="post" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-xl-6">
                     <div id="panel-1" class="panel">
@@ -26,14 +35,13 @@
                             </div>
                             <div class="panel-content">
                                 <div class="form-group">
-                                    <img src="img/demo/authors/josh.png" alt=""   class="img-responsive" width="200">
+                                    <img src="{{asset('/storage/' . $member->avatar)}}" alt=""   class="img-responsive" width="200">
                                 </div>
 
                                 <div class="form-group">
                                     <label class="form-label" for="avatar_input">Выберите аватар</label>
-                                    <input type="file" id="avatar_input" name="image" class="form-control-file">
+                                    <input type="file" id="avatar_input" name="avatar" class="form-control-file">
                                 </div>
-
                                 {{csrf_field()}}
 
                                 <div class="col-md-12 mt-3 d-flex flex-row-reverse">

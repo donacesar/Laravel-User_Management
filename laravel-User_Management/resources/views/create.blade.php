@@ -82,15 +82,15 @@
                                 <div class="form-group">
                                     <label class="form-label" for="example-select">Выберите статус</label>
                                     <select class="form-control" name="status" id="example-select">
-                                        <option>Онлайн</option>
-                                        <option>Отошел</option>
-                                        <option>Не беспокоить</option>
+                                        <option value="online">Онлайн</option>
+                                        <option value="away">Отошел</option>
+                                        <option value="busy">Не беспокоить</option>
                                     </select>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="form-label" for="avatar_input">Загрузить аватар</label>
-                                    <input type="file" id="avatar_input" name="image" class="form-control-file">
+                                    <input type="file" id="avatar_input" name="avatar" class="form-control-file">
                                 </div>
                             </div>
                         </div>

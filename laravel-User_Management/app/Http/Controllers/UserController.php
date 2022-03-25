@@ -4,26 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Member;
 use App\User;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
     private function access($id) {
-        dd('Метод ACCESS запущен');
-        if(Auth::user()->id != $id && !Auth::user()->is_admin) {
+        if(Auth::user()->member->id != $id and Auth::user()->role !== 'admin') {
             Session::flash('danger', 'У вас не достаточно прав');
             return redirect()->route('home')->throwResponse();
         }
     }
 
-    private function adminAccess() {
-        if (true) {}
-    }
     public function login(Request $request) {
 
         $this->validate($request, [
@@ -79,50 +75,67 @@ class UserController extends Controller
 
     public function create(Request $request) {
 
+        if (Auth::user()->role !== 'admin') {
+            Session::flash('danger', 'У вас нет прав администратора.');
+            return redirect()->route('home')->throwResponse();
+        }
+
         $this->validate($request, [
             'email' => 'required|email|unique:users',
             'password' => 'required',
+            'avatar' => 'image',
         ]);
+
         $user = new User();
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
         $user->save();
         $member = new Member();
+        $member->status = $request->status;
+        $member->avatar = $request->file('avatar')->store('img/avatars', 'public');
+        $member->name = $request->name;
+        $member->workplace = $request->workplace;
+        $member->phone = $request->phone;
+        $member->address = $request->address;
         $member->user_id = $user->id;
         $member->save();
-        Session::flash('success', 'Создание пользователя пешно завершено.');
+        Session::flash('success', 'Создание пользователя успешно завершено.');
         return redirect()->route('home');
-
-
-        dd($request->all());
-
     }
 
 
     public function edit(Request $request, $id) {
         $this->access($id);
-        dd($id, $request->all());
 
+        $member = Member::find($id);
+        $member->name = $request->name;
+        $member->workplace = $request->workplace;
+        $member->phone = $request->phone;
+        $member->address = $request->address;
+        $member->save();
+        Session::flash('success', 'Редактирование прошло успешно.');
+        return redirect()->route('home');
     }
 
     public function media(Request $request, $id) {
+        $this->access($id);
 
         $this->validate($request, [
-
-           'image' => 'required|image',
-
+           'avatar' => 'required|image',
         ]);
-        dd($id, $request->all());
+        $member = Member::find($id);
+        Storage::disk('public')->delete($member->avatar);
+        $member->avatar = $request->file('avatar')->store('img/avatars', 'public');
+        $member->save();
+        Session::flash('success', 'Аватар успешно изменен.');
+        return redirect()->route('home');
 
     }
 
-    public function profile(Request $request, $id) {
-
-        dd($id, $request->all());
-
-    }
 
     public function security(\Illuminate\Http\Request $request, $id) {
+
+        $this->access($id);
 
         $user_id = DB::table('members')->where('id', $id)->first()->user_id;
         $old_email = DB::table('users')->where('id', $user_id)->first()->email;
@@ -143,14 +156,36 @@ class UserController extends Controller
                 'confirm_password' => 'required|same:password'
             ]);
         }
-        dd($id, $request->all());
+        Session::flash('success', 'Email и(или) пароль были обновлены.');
+        return redirect()->route('home');
 
     }
 
     public function status(\Illuminate\Http\Request $request, $id) {
+        $this->access($id);
+        $member = Member::find($id);
+        $member->status = $request->status;
+        $member->save();
+        Session::flash('success', 'Статус установлен.');
+        return redirect()->route('home');
+    }
 
-        dd($id, $request->all());
+    public function delete($id) {
+        $this->access($id);
 
+        $member = Member::find($id);
+        Storage::disk('public')->delete($member->avatar);
+
+        $id = $member->user_id;
+
+        $member->user->delete();
+        $member->delete();
+
+        if(Auth::user()->id == $id) {
+            Auth::logout();
+        }
+        Session::flash('success', 'Пользователь успешно удален');
+        return back();
     }
 }
 

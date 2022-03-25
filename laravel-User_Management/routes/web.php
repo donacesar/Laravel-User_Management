@@ -32,22 +32,6 @@ Route::get('insert10members', function(){
 });
 
 
-/*
-Route::get('pictonull', function(){
-
-    $members = Member::where('id', '>=', 9)->get();
-    $members->map(function($item) {
-        // Стираем битые ссылки в базе
-       $item->avatar = null;
-       $item->save();
-    });
-
-    dd('Проверяй в базе обнулились ли аватарки');
-
-});
-*/
-
-
 // Auth Routes
 Route::middleware(['auth'])->group(function(){
 
@@ -72,6 +56,8 @@ Route::middleware(['auth'])->group(function(){
 
         Route::get('status/{id}', 'PageController@status');
         Route::post('status/{id}', 'UserController@status');
+
+        Route::get('delete/{id}', 'UserController@delete');
     });
 
 });

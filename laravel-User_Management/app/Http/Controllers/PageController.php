@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Member;
-use App\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 
 class PageController extends Controller
@@ -13,12 +11,12 @@ class PageController extends Controller
     public static function access($id) {
 
         if ((Auth::user()->member->id != $id) and (Auth::user()->role !== 'admin')) {
-            Session::flash('danger', 'У вас не достаточно прав');
+            Session::flash('danger', 'У вас не достаточно прав.');
             return redirect()->route('home')->throwResponse();
         }
     }
 
-    // Public Pagesdie;
+    // Public Pages;
 
     public function register() {
         return view('register');
@@ -51,22 +49,27 @@ class PageController extends Controller
 
     public function edit($id) {
         self::access($id);
-        return view('edit', ['id' => $id]);
+        $member = Member::find($id);
+        return view('edit', ['member' => $member]);
     }
 
     public function media($id) {
         self::access($id);
-        return view('media', ['id' => $id]);
+        $member = Member::find($id);
+        return view('media', ['member' => $member]);
     }
 
 
     public function security($id) {
         self::access($id);
-        return view('security', ['id' => $id]);
+
+        $user = Member::find($id)->user;
+        return view('security', ['user' => $user]);
     }
 
     public function status($id) {
         self::access($id);
-        return view('status', ['id' => $id]);
+        $member = Member::find($id);
+        return view('status', ['member' => $member]);
     }
 }

@@ -42,7 +42,7 @@
 
                     @endphp
                     <li>
-                        <strong><a class="nav-link" href="/profile/{{$member_id}}">{{\Illuminate\Support\Facades\Auth::user()->name}}</a></strong>
+                        <strong><a class="nav-link" href="/profile/{{$member_id}}">{{\Illuminate\Support\Facades\Auth::user()->member->name}}</a></strong>
                     </li>
                 @endif
 

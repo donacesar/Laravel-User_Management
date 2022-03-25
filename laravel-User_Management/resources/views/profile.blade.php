@@ -22,7 +22,7 @@
                     <div class="row no-gutters row-grid">
                         <div class="col-12">
                             <div class="d-flex flex-column align-items-center justify-content-center p-4">
-                                <img src="{{$member->avatar}}" class="rounded-circle shadow-2 img-thumbnail" alt="">
+                                <img src="{{asset('/storage/' . $member->avatar)}}" class="rounded-circle shadow-2 img-thumbnail" alt="">
                                 <h5 class="mb-0 fw-700 text-center mt-3">
                                     {{$member->name}}
                                     <small class="text-muted mb-0">{{$member->workplace}}</small>

@@ -70,7 +70,7 @@
                                     @if($member->avatar == null)
                                         <span class="rounded-circle profile-image d-block " style="background-image:url('img/demo/avatars/avatar-m.png'); background-size: cover;"></span>
                                     @else
-                                        <span class="rounded-circle profile-image d-block " style="background-image:url('{{$member->avatar}}'); background-size: cover;"></span>
+                                        <span class="rounded-circle profile-image d-block " style="background-image:url('{{asset('/storage/' . $member->avatar)}}'); background-size: cover;"></span>
                                     @endif
 
                                 </span>

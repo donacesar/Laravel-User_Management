@@ -13,7 +13,7 @@
     <main id="js-page-content" role="main" class="page-content mt-3">
         <div class="subheader">
             <h1 class="subheader-title">
-                <i class='subheader-icon fal fa-lock'></i> Безопасность {{$id}}
+                <i class='subheader-icon fal fa-lock'></i> Безопасность
             </h1>
 
         </div>
@@ -27,7 +27,7 @@
             </div>
         @endif
 
-        <form action="admin/security/{{$id}}" method="post">
+        <form action="admin/security/{{$user->id}}" method="post">
             <div class="row">
                 <div class="col-xl-6">
                     <div id="panel-1" class="panel">
@@ -39,7 +39,7 @@
                                 <!-- email -->
                                 <div class="form-group">
                                     <label class="form-label" for="email_input">Email</label>
-                                    <input type="text" id="email_input" name="email" class="form-control" value="john@example.com">
+                                    <input type="text" id="email_input" name="email" class="form-control" value="{{$user->email}}">
                                 </div>
 
                                 <!-- password -->
