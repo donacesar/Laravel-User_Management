@@ -31,6 +31,10 @@ Route::get('insert10members', function(){
 
 });
 
+Route::get('test', function() {
+    dd(\App\User::find(5)->all()->all());
+});
+
 
 // Auth Routes
 Route::middleware(['auth'])->group(function(){

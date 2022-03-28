@@ -38,6 +38,7 @@ class UserController extends Controller
         if(Auth::attempt($credentials, $is_remembered)) {
             /*$request->session()->regenerate();
             $request->session(['status' => 'User logged in successfully!']);*/
+            Session::flash('success', 'Вы успешно авторизованы');
             return redirect()->route('home');
 
         }

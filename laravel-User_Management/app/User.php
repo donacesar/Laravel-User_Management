@@ -29,9 +29,6 @@ class User extends Authenticatable
     ];
 
     public static function index() {
-       /* $users = DB::table('users')->select('*')->get();
-        $allUsers = $users->all();
-        return $allUsers;*/
 
         return self::all();
     }
